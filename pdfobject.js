@@ -1,5 +1,5 @@
 /*
-    PDFObject v1.2.20111123
+    PDFObject v2.0.20150110
     https://github.com/pipwerks/PDFObject
     Copyright (c) Philip Hutchison
     MIT-style license: http://pipwerks.mit-license.org/
@@ -8,7 +8,7 @@
 /*jslint browser: true, sloppy: true, white: true, plusplus: true */
 /*global ActiveXObject, window */
 
-var PDFObject = function (obj){
+var PDF_Object = function (obj){
 
     if(!obj || !obj.url){ return false; }
 
