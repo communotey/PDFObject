@@ -1,16 +1,7 @@
-/*
-    PDFObject v2.0.20150110
-    https://github.com/pipwerks/PDFObject
-    Copyright (c) Philip Hutchison
-    MIT-style license: http://pipwerks.mit-license.org/
-*/
-
-/*jslint browser: true, sloppy: true, white: true, plusplus: true */
-/*global ActiveXObject, window */
-
-var PDF_Object = function (obj){
-
-    if(!obj || !obj.url){ return false; }
+var PDF_Object = function (obj) {
+    if (!obj || !obj.url) {
+        return false;
+    }
 
     var pdfobjectversion = "1.2",
         //Set reasonable defaults
@@ -37,7 +28,7 @@ var PDF_Object = function (obj){
        Supporting functions
        ---------------------------------------------------- */
 
-    createAXO = function (type){
+    createAXO = function (type) {
         var ax;
         try {
             ax = new ActiveXObject(type);
@@ -49,7 +40,7 @@ var PDF_Object = function (obj){
     };
 
     //Tests specifically for Adobe Reader (aka Acrobat) in Internet Explorer
-    hasReaderActiveX = function (){
+    hasReaderActiveX = function () {
 
         var axObj = null;
 
@@ -58,10 +49,14 @@ var PDF_Object = function (obj){
             axObj = createAXO("AcroPDF.PDF");
 
             //If "AcroPDF.PDF" didn't work, try "PDF.PdfCtrl"
-            if(!axObj){ axObj = createAXO("PDF.PdfCtrl"); }
+            if (!axObj) {
+                axObj = createAXO("PDF.PdfCtrl");
+            }
 
             //If either "AcroPDF.PDF" or "PDF.PdfCtrl" are found, return true
-            if (axObj !== null) { return true; }
+            if (axObj !== null) {
+                return true;
+            }
 
         }
 
@@ -73,15 +68,15 @@ var PDF_Object = function (obj){
 
 
     //Tests specifically for Adobe Reader (aka Adobe Acrobat) in non-IE browsers
-    hasReader = function (){
+    hasReader = function () {
 
         var i,
-            n = navigator.plugins,
+        n = navigator.plugins,
             count = n.length,
             regx = /Adobe Reader|Adobe PDF|Acrobat/gi;
 
-        for(i=0; i<count; i++){
-            if(regx.test(n[i].name)){
+        for (i = 0; i < count; i++) {
+            if (regx.test(n[i].name)) {
                 return true;
             }
         }
@@ -92,25 +87,44 @@ var PDF_Object = function (obj){
 
 
     //Detects unbranded PDF support
-    hasGeneric = function (){
-        var plugin = navigator.mimeTypes["application/pdf"];
-        return (plugin && plugin.enabledPlugin);
+    hasGeneric = function () {
+
+        var mimeCheck = function () {
+            return Array.prototype.reduce.call(navigator.plugins, function (supported, plugin) {
+                return supported || Array.prototype.reduce.call(plugin, function (supported, mime) {
+                    return supported || mime.type == "application/pdf";
+                }, supported);
+            }, false);
+        };
+
+        if (!mimeCheck()) //mimeType is "text/html"
+            return "html";
+        else { //mimeType is "application/pdf"
+            var plugin = navigator.mimeTypes["application/pdf"];
+            return (plugin && plugin.enabledPlugin);
+        }
+
     };
 
 
     //Determines what kind of PDF support is available: Adobe or generic
-    pluginFound = function (){
+    pluginFound = function () {
 
         var type = null;
 
-        if(hasReader() || hasReaderActiveX()){
+        if (hasReader() || hasReaderActiveX()) {
 
             type = "Adobe";
 
-        } else if(hasGeneric()) {
+        } else {
+            var plugin = hasGeneric();
+            if (plugin) {
+                if (plugin == "html") {
+                    return plugin;
+                }
 
-            type = "generic";
-
+                type = "generic";
+            }
         }
 
         return type;
@@ -119,13 +133,15 @@ var PDF_Object = function (obj){
 
 
     //If setting PDF to fill page, need to handle some CSS first
-    setCssForFullWindowPdf = function (){
+    setCssForFullWindowPdf = function () {
 
         var html = document.getElementsByTagName("html"),
             html_style,
             body_style;
 
-        if(!html){ return false; }
+        if (!html) {
+            return false;
+        }
 
         html_style = html[0].style;
         body_style = document.body.style;
@@ -141,12 +157,14 @@ var PDF_Object = function (obj){
 
 
     //Creating a querystring for using PDF Open parameters when embedding PDF
-    buildQueryString = function(pdfParams){
+    buildQueryString = function (pdfParams) {
 
         var string = "",
             prop;
 
-        if(!pdfParams){ return string; }
+        if (!pdfParams) {
+            return string;
+        }
 
         for (prop in pdfParams) {
 
@@ -154,7 +172,7 @@ var PDF_Object = function (obj){
 
                 string += prop + "=";
 
-                if(prop === "search") {
+                if (prop === "search") {
 
                     string += encodeURI(pdfParams[prop]);
 
@@ -177,18 +195,32 @@ var PDF_Object = function (obj){
 
 
     //Simple function for returning values from PDFObject
-    get = function(prop){
+    get = function (prop) {
 
         var value = null;
 
-        switch(prop){
-            case "url" : value = url; break;
-            case "id" : value = id; break;
-            case "width" : value = width; break;
-            case "height" : value = height; break;
-            case "pdfOpenParams" : value = pdfOpenParams; break;
-            case "pluginTypeFound" : value = pluginTypeFound; break;
-            case "pdfobjectversion" : value = pdfobjectversion; break;
+        switch (prop) {
+            case "url":
+                value = url;
+                break;
+            case "id":
+                value = id;
+                break;
+            case "width":
+                value = width;
+                break;
+            case "height":
+                value = height;
+                break;
+            case "pdfOpenParams":
+                value = pdfOpenParams;
+                break;
+            case "pluginTypeFound":
+                value = pluginTypeFound;
+                break;
+            case "pdfobjectversion":
+                value = pdfobjectversion;
+                break;
         }
 
         return value;
@@ -201,19 +233,24 @@ var PDF_Object = function (obj){
        ---------------------------------------------------- */
 
 
-    embed = function(targetID){
+    embed = function (targetID) {
 
-        if(!pluginTypeFound){ return false; }
+        if (!pluginTypeFound) {
+            return false;
+            //TODO: enable PDF.js
+        }
 
         var targetNode = null;
 
-        if(targetID){
+        if (targetID) {
 
             //Allow users to pass an element OR an element's ID
             targetNode = (targetID.nodeType && targetID.nodeType === 1) ? targetID : document.getElementById(targetID);
 
             //Ensure target element is found in document before continuing
-            if(!targetNode){ return false; }
+            if (!targetNode) {
+                return false;
+            }
 
         } else {
 
@@ -223,8 +260,16 @@ var PDF_Object = function (obj){
             height = "100%";
 
         }
+        var type = "application/pdf";
 
-        targetNode.innerHTML = '<object    data="' +url +'" type="application/pdf" width="' +width +'" height="' +height +'"></object>';
+        if (pluginTypeFound == "html") {
+            type = "text/html";
+            url = "pdfjs/web/viewer.html?file=../../"+url + "#zoom=page-width";
+        }
+        else{
+            url = url + "#" + buildQueryString(pdfOpenParams)
+        }
+        targetNode.innerHTML = '<object data="' + url + '" type="' + type + '" width="' + width + '" height="' + height + '"></object>';
 
         return targetNode.getElementsByTagName("object")[0];
 
@@ -232,12 +277,15 @@ var PDF_Object = function (obj){
 
     //The hash (#) prevents odd behavior in Windows
     //Append optional Adobe params for opening document
-    url = encodeURI(obj.url) + "#" + buildQueryString(pdfOpenParams);
+    url = encodeURI(obj.url);
     pluginTypeFound = pluginFound();
 
-    this.get = function(prop){ return get(prop); };
-    this.embed = function(id){ return embed(id); };
-    this.pdfobjectversion = pdfobjectversion;
+    this.get = function (prop) {
+        return get(prop);
+    };
+    this.embed = function (id) {
+        return embed(id);
+    };
 
     return this;
 

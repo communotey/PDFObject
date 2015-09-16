@@ -1,0 +1,71 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="description" content="McMaster University - SFWR ENG 3F03 - Test 1 2011 Solutions"/>
+<link href='https://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css' />
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,900' rel='stylesheet' type='text/css' />
+<link rel="icon" type="image/png" href="https://build.communote.net/static/images/favicon.png"/>
+<title>Our first file! Woot woot!</title>
+
+<!-- This example created for PDFObject.com by Philip Hutchison (www.pipwerks.com) -->
+<link rel="stylesheet" href="css/pdfobject.css"/>
+
+<script type="text/javascript" src="js/pdfobject.js"></script>
+<script type="text/javascript" src="js/loadFile.js"></script>
+<script type="text/javascript">
+
+
+/*
+
+PDFObject returns a reference to the JavaScript object (pseudo 'class' instance).
+PDFObject.embed() returns a reference to the embedded HTML object.
+
+Knowing this, we store the references in two separate variables and perform
+actions with them.  For this example, We'll store the PDFObject obj in 'pObj'
+and the HTML object in htmlObj.
+
+*/
+var link = "sample.pdf";
+var pObj = new PDF_Object({ 
+
+	url: link,
+	id: "myPDF",
+	
+	pdfOpenParams: {
+		navpanes: 0,
+		toolbar: 0,
+		statusbar: 0,
+		view: "FitH"
+	}
+});
+
+//Note: the PDF has NOT been embedded yet because .embed() has not been invoked.
+
+window.onload = function (){
+
+	var desc=document.getElementsByName('description')[0].getAttribute('content');
+	if (!desc)
+	{
+		desc = "Testing the Best PDF Embedder Yet - PDFObject2";
+	}
+
+	loadFile(pObj, desc);
+
+};
+	
+</script>
+</head>
+<body>
+<div id="pdf"></div>
+
+<h1 id="content_title" style="font-family: 'Open Sans', sans-serif;">Testing embedding a PDF using <a href="http://pdfobject.com/">PDFObject</a></h1>
+
+<p id="statement">The embed script didn't load. <a id="content_link" href="">Download the file here</a>. By the way, we're using <a href="http://pdfobject.com/">PDFObject</a> to embed the document.</p>
+
+</body>
+<script>
+	document.getElementById('content_link').href= link;
+</script>
+</html>
