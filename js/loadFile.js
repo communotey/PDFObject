@@ -31,7 +31,7 @@ function loadFile(file, description){
 			s.className = "fail";
 		}	
 	}
-	msg +=  ' <a href="' + file.get("url") + '">download here</a>.';
+	msg +=  ' <a download href="' + file.get("url") + '">download here</a>.';
 	s.innerHTML = msg;
 
 };
