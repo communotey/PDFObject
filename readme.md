@@ -4,14 +4,16 @@ PDFObject is a lightweight JavaScript library for dynamically embedding PDFs in 
 
 The purpose of the fork is:
 
-* To fix bugs the author refused to fix
-* To add [PDF.js](https://github.com/mozilla/pdf.js) support when the script fails
+[ ] To fix bugs the author refused to fix
+[ ] To add [PDF.js](https://github.com/mozilla/pdf.js) support when the script fails
+[ ] To maintain support of older browsers after the PDFObject v2 changes
+[ ] Enable WebTorrent support of PDFs
 
 -----
 
 Modeled after SWFObject.
 
-PDFObject v2.0.20150105
+PDFObjectPlus v0.3.20150105
 
 This was forked from [pipwerks](https://github.com/pipwerks/PDFObject), which has the following license: 
 
