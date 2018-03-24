@@ -1,3 +1,5 @@
+// import pdfjs
+
 function loadViewer( url, id, pdfOpenParams, callback ) {
     id = id || "pdf"
     pdfOpenParams = pdfOpenParams || {
@@ -290,12 +292,14 @@ var PDFViewer = function (obj) {
             type = "text/html";
             url = "pdfjs/web/viewer.html?file=../../"+url + "#zoom=page-width";
         }
-        else{
+        else {
             url = url + "#" + buildQueryString(pdfOpenParams)
         }
         targetNode.innerHTML = '<object data="' + url + '" type="' + type + '" width="' + width + '" height="' + height + '"></object>';
+        console.log(targetNode)
 
-        return targetNode.getElementsByTagName("object")[0];
+        // return targetNode.getElementsByTagName("object")[0];
+        return targetNode.innerHTML;
 
     };
 
