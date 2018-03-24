@@ -1,18 +1,42 @@
-var PDF_Object = function (obj) {
+function loadViewer( url, id, pdfOpenParams, callback ) {
+    id = id || "pdf"
+    pdfOpenParams = pdfOpenParams || {
+		navpanes: 0,
+		toolbar: 0,
+		statusbar: 0,
+		view: "FitH"
+    };
+    var nocb = (response) => { console.log(response) };
+    callback = callback || nocb;
+
+    var cabinet = new PDFViewer({ url, id, pdfOpenParams });
+    let success = false;
+    let htmlObj = cabinet.embed(id)
+    
+    if (htmlObj && cabinet.get("pluginTypeFound")) {
+        callback(cabinet);
+    }
+    else {
+        callback(false)
+    }
+}
+
+
+var PDFViewer = function (obj) {
     if (!obj || !obj.url) {
         return false;
     }
 
     var pdfobjectversion = "1.2",
-        //Set reasonable defaults
-        id = obj.id || false,
+        // set reasonable defaults
+        id = obj.id || 'pdf',
         width = obj.width || "100%",
         height = obj.height || "100%",
         pdfOpenParams = obj.pdfOpenParams,
         url,
         pluginTypeFound,
 
-        //declare functions
+        // declare functions
         createAXO,
         hasReaderActiveX,
         hasReader,
@@ -237,7 +261,7 @@ var PDF_Object = function (obj) {
 
         if (!pluginTypeFound) {
             return false;
-            //TODO: enable PDF.js
+            // TODO: enable PDF.js
         }
 
         var targetNode = null;

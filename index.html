@@ -3,7 +3,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta name="description" content="McMaster University - SFWR ENG 3F03 - Test 1 2011 Solutions"/>
 <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css' />
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,700,900' rel='stylesheet' type='text/css' />
 <link rel="icon" type="image/png" href="https://build.communote.net/static/images/favicon.png"/>
@@ -13,7 +12,6 @@
 <link rel="stylesheet" href="css/pdfobject.css"/>
 
 <script type="text/javascript" src="js/pdfobject.js"></script>
-<script type="text/javascript" src="js/loadFile.js"></script>
 <script type="text/javascript">
 
 
@@ -28,41 +26,51 @@ and the HTML object in htmlObj.
 
 */
 var link = "sample.pdf";
-var pObj = new PDF_Object({ 
+var id = "pdf";
 
-	url: link,
-	id: "myPDF",
-	
-	pdfOpenParams: {
+var pdfOpenParams = {
 		navpanes: 0,
 		toolbar: 0,
 		statusbar: 0,
 		view: "FitH"
 	}
-});
 
-//Note: the PDF has NOT been embedded yet because .embed() has not been invoked.
+var loaded = (response) => {
 
-window.onload = function (){
+	var statement = document.getElementById("statement");
+	var desc = document.getElementById("description");
 
-	var desc=document.getElementsByName('description')[0].getAttribute('content');
-	if (!desc)
-	{
-		desc = "Testing the Best PDF Embedder Yet - PDFObject2";
+	document.getElementById("content_link").href = response.get("url");
+
+	statement.className = "fail";
+	var title = "McMaster University - SFWR ENG 3F03 - Test 1 2011 Solutions";
+	var msg = "";
+
+	document.getElementById("content_title").innerHTML=title;
+	document.title=title;
+
+	if (response) {
+		document.getElementById(id).className = "embedded";  // style the div	
+		statement.className = "success";
+		desc.innerHTML = "";
+	} else {
+		desc.innerHTML = "Error embedding file: perhaps we don't support your browser."
 	}
+}
 
-	loadFile(pObj, desc);
-
+window.onload = () => {
+	loadViewer(link, id, pdfOpenParams, loaded)
 };
 	
 </script>
 </head>
 <body>
-<div id="pdf"></div>
+<div id="pdf" class="embedded"></div>
 
 <h1 id="content_title" style="font-family: 'Open Sans', sans-serif;">Testing embedding a PDF using <a href="http://pdfobject.com/">PDFObject</a></h1>
 
-<p id="statement">The embed script didn't load. <a download id="content_link" href="">Download the file here</a>. By the way, we're using <a href="http://pdfobject.com/">PDFObject</a> to embed the document.</p>
+<p id="statement"><span id="description">The embed script didn't load. </span><a download id="content_link" href="">Download the file here</a></p>
+
 
 </body>
 <script>
