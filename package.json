@@ -4,6 +4,8 @@
   "description": "Embeds PDFs inside object tags",
   "main": "index.js",
   "scripts": {
+    "build": "./node_modules/.bin/webpack",
+    "lint": "./node_modules/.bin/eslint src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,7 +18,10 @@
     "url": "https://github.com/communotey/PDFObject/issues"
   },
   "homepage": "https://github.com/communotey/PDFObject#readme",
-  "dependencies": {
-    "pdfjs-dist": "^2.0.453"
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^5.12.0",
+    "ts-loader": "^5.3.3",
+    "webpack": "^4.28.4"
   }
 }
