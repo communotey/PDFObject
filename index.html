@@ -9,71 +9,17 @@
 <title>Our first file! Woot woot!</title>
 
 <!-- This example created for PDFObject.com by Philip Hutchison (www.pipwerks.com) -->
-<link rel="stylesheet" href="css/pdfobject.css"/>
 
-<script type="text/javascript" src="src/pdfobject.js"></script>
-<script type="text/javascript">
-
-
-/*
-
-PDFObject returns a reference to the JavaScript object (pseudo 'class' instance).
-PDFObject.embed() returns a reference to the embedded HTML object.
-
-Knowing this, we store the references in two separate variables and perform
-actions with them.  For this example, We'll store the PDFObject obj in 'pObj'
-and the HTML object in htmlObj.
-
-*/
-var link = "sample.pdf";
-var id = "pdf";
-
-var pdfOpenParams = {
-		navpanes: 0,
-		toolbar: 0,
-		statusbar: 0,
-		view: "FitH"
-	}
-
-var loaded = (response) => {
-
-	var statement = document.getElementById("statement");
-	var desc = document.getElementById("description");
-
-	document.getElementById("content_link").href = response.get("url");
-
-	statement.className = "fail";
-	var title = "McMaster University - SFWR ENG 3F03 - Test 1 2011 Solutions";
-	var msg = "";
-
-	document.getElementById("content_title").innerHTML=title;
-	document.title=title;
-
-	if (response) {
-		document.getElementById(id).className = "embedded";  // style the div	
-		statement.className = "success";
-		desc.innerHTML = "";
-	} else {
-		desc.innerHTML = "Error embedding file: perhaps we don't support your browser."
-	}
-}
-
-window.onload = () => {
-	loadViewer(link, id, pdfOpenParams, loaded)
-};
-	
-</script>
 </head>
 <body>
-<div id="pdf"></div>
-
-<h1 id="content_title" style="font-family: 'Open Sans', sans-serif;">Testing embedding a PDF using <a href="http://pdfobject.com/">PDFObject</a></h1>
-
-<p id="statement"><span id="description">The embed script didn't load. </span><a download id="content_link" href="">Download the file here</a></p>
-
+	<div
+		id="test"
+		data-pdf-object-id="test"
+		data-url="sample.pdf"
+		data-progressive="pdfjs/web/viewer.html?zoom=page-width#file=../../"
+		data-pdf-param-view="FitH"
+	></div>
+<script type="text/javascript" src="bundle/index.js"></script>
 
 </body>
-<script>
-	document.getElementById('content_link').href= link;
-</script>
 </html>

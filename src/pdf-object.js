@@ -1,3 +1,5 @@
+// import { resolve } from 'url'
+
 /* global ActiveXObject, window, jQuery */
 
 export default class PdfObject {
@@ -8,7 +10,7 @@ export default class PdfObject {
     }
     this.pdfobjectversion = '3.0'
     // set reasonable defaults
-    this.targetNode = conf.targetNode || this.getTargetElement(`#${conf.id}`) || 'pdf'
+    this.targetNode = conf.targetNode || this.getTargetElement(`#${conf.id}`)
     this.width = conf.width || '100%'
     this.height = conf.height || '100%'
     this.pdfOpenParams = conf.pdfOpenParams || {
@@ -21,7 +23,11 @@ export default class PdfObject {
     this.pluginTypeFound = this.pluginFound()
     this.url = conf.url
 
-    this.embed(this.targetNode)
+    this.onReady = new Promise((resolve, reject) => {
+      this._ready = resolve
+    })
+
+    this._ready(this.embed(this.targetNode))
   }
   createAXO (type) {
     var ax
@@ -142,28 +148,51 @@ export default class PdfObject {
   embed (targetNode) {
     this.status = 'embedding'
 
-    if (!this.pluginTypeFound) {
-      return false
-      // TODO: enable PDF.js
-    }
-
     // Ensure target element is found in document before continuing
     if (!targetNode) {
       return false
     }
-    var type = 'application/pdf'
 
-    if (this.pluginTypeFound === 'html') {
-      type = 'text/html'
-      this.url = 'pdfjs/web/viewer.html?file=../../' + this.url + '#zoom=page-width'
+    // let type = 'application/pdf'
+
+    if (!this.pluginTypeFound) {
+      this.url = this.progressive + this.url + '#zoom=page-width'
+      const viewer = `<iframe
+        height="${this.height}"
+        src="${this.url}"
+        width="${this.width}"
+      ></iframe>`
+      // targetNode.innerHTML = '<iframe src="' + this.url + '" width="' + this.width + '" height="' + this.height + '"></iframe>'
+      targetNode.innerHTML = viewer
+      return 'iframe'
+    } else if (this.pluginTypeFound === 'html') {
+      const type = 'text/html'
+      const viewer = `<object
+        data="${this.url}"
+        height="${this.height}"
+        type="${type}"
+        width="${this.width}"
+      ></object>`
+      // targetNode.innerHTML = '<object data="' + this.url + '" type="' + type + '" width="' + this.width + '" height="' + this.height + '"></object>'
+      targetNode.innerHTML = viewer
+      return type
     } else {
+      const type = 'application/pdf'
       this.url = this.url + '#' + this.buildFragmentString(this.pdfOpenParams)
+      const viewer = `<object
+        data="${this.url}"
+        height="${this.height}"
+        type="${type}"
+        width="${this.width}"
+      ></object>`
+      // targetNode.innerHTML = '<object data="' + this.url + '" type="' + type + '" width="' + this.width + '" height="' + this.height + '"></object>'
+      targetNode.innerHTML = viewer
+      return type
     }
-    targetNode.innerHTML = '<object data="' + this.url + '" type="' + type + '" width="' + this.width + '" height="' + this.height + '"></object>'
 
     // return targetNode.getElementsByTagName("object")[0];
 
-    this.status = 'ready'
-    return targetNode.innerHTML
+    // this.status = 'ready'
+    // return targetNode.innerHTML
   }
 }
